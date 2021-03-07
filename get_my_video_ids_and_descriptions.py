@@ -55,6 +55,10 @@ def get_video_ids(channel_id):
         ]
 
         df_ids = pd.DataFrame(columns=["video-ids"])
+        try:
+            df_ids = pd.read_csv(file_video_ids)
+        except FileNotFoundError:
+            pass
 
         df_ids.append(
             pd.DataFrame(video_ids, columns=["video-ids"])
