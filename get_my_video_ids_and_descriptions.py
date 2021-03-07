@@ -19,7 +19,8 @@ def authenticate():
     api_version = "v3"
 
     youtube = googleapiclient.discovery.build(
-        api_service_name, api_version, developerKey=mysecrets.developer_key)
+        api_service_name, api_version, developerKey=mysecrets.developer_key
+    )
 
     return youtube
 
@@ -37,28 +38,27 @@ def get_video_ids(channel_id):
             channelId=channel_id,
             maxResults=50,
             pageToken=next_page_token,
-            type="video"
-            )
+            type="video",
+        )
 
         response = request.execute()
 
-        if 'nextPageToken' in response.keys():
-            next_page_token = response['nextPageToken']
+        if "nextPageToken" in response.keys():
+            next_page_token = response["nextPageToken"]
         else:
             more_than_50_results = False
 
-        video_ids = ([x["id"]["videoId"] for x in response['items'] if
-                      x['id']["kind"] == "youtube#video"])
+        video_ids = [
+            x["id"]["videoId"]
+            for x in response["items"]
+            if x["id"]["kind"] == "youtube#video"
+        ]
 
         df_ids = pd.DataFrame(columns=["video-ids"])
-        try:
-            df_ids = pd.read_csv(file_video_ids)
-        except FileNotFoundError:
-            pass
 
         df_ids.append(
-            pd.DataFrame(video_ids, columns=["video-ids"])).drop_duplicates().to_csv(
-            file_video_ids, index=False)
+            pd.DataFrame(video_ids, columns=["video-ids"])
+        ).drop_duplicates().to_csv(file_video_ids, index=False)
 
 
 def get_video_description():
@@ -70,10 +70,7 @@ def get_video_description():
 
     for video_id in df_ids["video-ids"].unique():
 
-        request = youtube.videos().list(
-            part="snippet",
-            id=video_id
-            )
+        request = youtube.videos().list(part="snippet", id=video_id)
 
         response = request.execute()
 
@@ -81,18 +78,22 @@ def get_video_description():
         if "tags" in response["items"][0]["snippet"].keys():
             dict_video = {
                 "title": response["items"][0]["snippet"]["title"],
-                "description": response["items"][0]["snippet"]["description"].split("\n"),
-                "tags": response["items"][0]["snippet"]["tags"]
-                }
+                "description": response["items"][0]["snippet"]["description"].split(
+                    "\n"
+                ),
+                "tags": response["items"][0]["snippet"]["tags"],
+            }
         else:
             dict_video = {
                 "title": response["items"][0]["snippet"]["title"],
-                "description": response["items"][0]["snippet"]["description"].split("\n"),
-                }
+                "description": response["items"][0]["snippet"]["description"].split(
+                    "\n"
+                ),
+            }
 
         dict_videos[response["items"][0]["id"]] = dict_video
 
-    with open('video_info.json', 'w', encoding='utf-8') as file:
+    with open("video_info.json", "w", encoding="utf-8") as file:
         file.write(json.dumps(dict_videos, indent=2))
 
 
@@ -105,24 +106,3 @@ if __name__ == "__main__":
 
     # get info from the video you uploaded on your channel
     get_video_description()
-
-# # todo explain this
-# # change this code if you want to save more info from a video
-# dict_video = {
-#     "title": response["items"][0]["snippet"]["title"],
-#     "description": response["items"][0]["snippet"]["description"].split("\n"),
-#     "tags": response["items"][0]["snippet"]["tags"]
-#     }
-
-# more_than_50_results = True
-# next_page_token = ""
-#
-# while more_than_50_results:
-#
-#     request = youtube.search().list(
-#         part="snippet",
-#         channelId=channel_id,
-#         maxResults=50,
-#         pageToken=next_page_token,
-#         type="video"
-#         )
