@@ -104,8 +104,8 @@ if __name__ == "__main__":
 
     youtube = authenticate()
 
-    for video_id in list(dict_videos.keys())[:1]:
-        print(video_id)
+    for ix, video_id in enumerate(list(dict_videos.keys())[:14]):
+        print(ix, video_id)
         update_videos(
             id_video=video_id,
             title=dict_videos[video_id]["title"],
