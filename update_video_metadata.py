@@ -74,6 +74,8 @@ def update_videos(id_video, title, description, tags):
 
 if __name__ == "__main__":
 
+    youtube = authenticate()
+
     with open("video_info.json", "r", encoding="utf-8") as file:
         dict_videos = json.load(file)
 
@@ -102,13 +104,12 @@ if __name__ == "__main__":
         except KeyError:
             pass
 
-    youtube = authenticate()
-
-    for ix, video_id in enumerate(list(dict_videos.keys())[:14]):
-        print(ix, video_id)
-        update_videos(
-            id_video=video_id,
-            title=dict_videos[video_id]["title"],
-            description="\n".join(dict_videos[video_id]["description"]),
-            tags=list(set(dict_videos[video_id]["tags"])),
-        )
+    for ix, video_id in enumerate(list(dict_videos.keys())[0:]):
+        # print(ix, video_id)
+        if video_id == 'MlhP8pfOynI':
+            update_videos(
+                id_video=video_id,
+                title=dict_videos[video_id]["title"],
+                description="\n".join(dict_videos[video_id]["description"]),
+                tags=list(set(dict_videos[video_id]["tags"])),
+            )
