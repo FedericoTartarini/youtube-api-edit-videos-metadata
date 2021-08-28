@@ -105,7 +105,6 @@ if __name__ == "__main__":
             pass
 
     for ix, video_id in enumerate(list(dict_videos.keys())[62:]):
-        # MlhP8pfOynI
         print(ix, video_id)
         update_videos(
             id_video=video_id,
