@@ -95,7 +95,7 @@ if __name__ == "__main__":
                 )
                 exit()
 
-            if len(", ".join(list(set(dict_videos[video_id]["tags"])))) > 500:
+            if len(", ".join(list(dict_videos[video_id]["tags"]))) > 500:
                 print(
                     f"Tags too long -- {video_id} current length {len(' '.join(dict_videos[video_id]['tags']))}"
                 )
@@ -104,12 +104,12 @@ if __name__ == "__main__":
         except KeyError:
             pass
 
-    for ix, video_id in enumerate(list(dict_videos.keys())[0:]):
-        # print(ix, video_id)
-        if video_id == 'MlhP8pfOynI':
-            update_videos(
-                id_video=video_id,
-                title=dict_videos[video_id]["title"],
-                description="\n".join(dict_videos[video_id]["description"]),
-                tags=list(set(dict_videos[video_id]["tags"])),
-            )
+    for ix, video_id in enumerate(list(dict_videos.keys())[62:]):
+        # MlhP8pfOynI
+        print(ix, video_id)
+        update_videos(
+            id_video=video_id,
+            title=dict_videos[video_id]["title"],
+            description="\n".join(dict_videos[video_id]["description"]),
+            tags=list(dict_videos[video_id]["tags"]),
+        )
